@@ -1,12 +1,10 @@
 package baseball;
 
+import camp.nextstep.edu.missionutils.Console;
 import camp.nextstep.edu.missionutils.Randoms;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
-import java.util.stream.IntStream;
+import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class Application {
@@ -22,8 +20,8 @@ public class Application {
     public static void aGame() {                       //게임시작문구부터 1판의 종료까지의 과정
         beginningPhrase();
         List<Integer> opponentScore = getRand();
-        int[] myGuess = setNum();
-        boolean check = compareNum(myGuess, opponentScore);
+        int[] myGuess = setNum();                      //내가 추측하는 숫자 입력
+        boolean check = compareNum(myGuess, opponentScore);  //컴퓨터가 설정한 답과 비교
 
         while (!check) {
             myGuess = setNum();
@@ -35,7 +33,7 @@ public class Application {
 
     public static boolean setReStart() {                  //aGame을 통해 한판을 마친뒤 계속할지 1과 2의 입력을 통해 결정.
         System.out.println("새로 시작하려면 1, 종료하려면 2를 입력하세요.");
-        Scanner s = new Scanner(System.in);
+        Scanner s = new Scanner(Console.readLine());      //처음에 테스트 pass가 안되었는데 System.in을 Console.readLine으로 바꾸어 해결되었다.
         int num = s.nextInt();
         if (num == 1) return true;
         return false;
@@ -66,7 +64,7 @@ public class Application {
             return false;
         }
         if (strike > 0 && ball > 0) {
-            System.out.println(ball + "볼" + strike + "스트라이크");
+            System.out.println(ball + "볼 " + strike + "스트라이크");
             return false;
         }
         if (ball > 0) {
@@ -103,20 +101,34 @@ public class Application {
 
     public static int[] setNum() {                                        //내가 추측할 점수를 입력한다.
         System.out.print("숫자를 입력해주세요 : ");
-        Scanner s = new Scanner(System.in);
-        Integer num = s.nextInt();
-        int[] digits = Stream.of(String.valueOf(num).split("")).mapToInt(Integer::parseInt).toArray();
-        try {
-            if (digits.length != 3) {
-                throw new IllegalArgumentException("잘못 입력했습니다.");
-
-            }
-        } catch (IllegalArgumentException e) {
-            System.exit(0);
+        Scanner s = new Scanner(Console.readLine());
+        //Integer num = s.nextInt();
+        String str = s.next();
+        if (!isNum(str)) {
+            throwIllegalArgumentException();
         }
+        int[] digits = Stream.of(String.valueOf(str).split("")).mapToInt(Integer::parseInt).toArray();
 
+        if (digits.length != 3) {
+
+            throwIllegalArgumentException();
+        }
         return digits;
     }
+    public static boolean isNum(String str){
+        for(int i=0;i<str.length();i++){
+            char ch = str.charAt(i);
+            if (ch<'0' || ch>'9') return false;
+        }
+        return true;
+    }
+
+    public static int[] throwIllegalArgumentException() {
+        throw new IllegalArgumentException();
+    }
+
+
+
 }
 
 //    public static boolean iscontainNumber(int ballNumber, List<Integer> data){  스트림에 숫자가 존재하는지 판별하기 위해 짰는데

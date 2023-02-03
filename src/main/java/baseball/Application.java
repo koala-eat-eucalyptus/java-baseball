@@ -32,11 +32,7 @@ public class Application {
     }
 
     public static boolean setReStart() {                  //aGame을 통해 한판을 마친뒤 계속할지 1과 2의 입력을 통해 결정.
-        BaseballView.output("새로 시작하려면 1, 종료하려면 2를 입력하세요.");
-        Scanner s = BaseballView.input();      //처음에 테스트 pass가 안되었는데 System.in을 Console.readLine으로 바꾸어 해결되었다.
-        int num = s.nextInt();
-        if (num == 1) return true;
-        return false;
+        return BaseballView.setRestart();
     }
 
     public static boolean compareNum(int[] me, List<Integer> opponent) {          //사용자가 입력한 점수와 컴퓨터의 점수 비교
@@ -84,21 +80,21 @@ public class Application {
 
     public static boolean ballCount(Integer strike, Integer ball) {      //compareNum함수에서 넘겨받은 데이터를 통해 출력하고
         if (strike == 0 && ball == 0) {                                  //boolean값을 판별함.
-            BaseballView.output(NOTHING);
+            System.out.println(NOTHING);
             return false;
         }
 
         if (strike > 0 && ball > 0) {
-            BaseballView.output(ball + BALL + strike + STRIKE);
+            System.out.println(ball + BALL + strike + STRIKE);
             return false;
         }
         if (ball > 0) {
-            BaseballView.output(ball + BALL);
+            System.out.println(ball + BALL);
             return false;
         }
 
         if (strike > 0) {
-            BaseballView.output(strike + STRIKE);
+            System.out.println(strike + STRIKE);
             return isThreeStrikeGameFinish(strike);
         }
         return false;
@@ -131,9 +127,8 @@ public class Application {
     }
 
     public static int[] setNumber() {                                        //내가 추측할 점수를 입력한다.
-        System.out.print("숫자를 입력해주세요 : ");
-        Scanner s = BaseballView.input();
-        String str = s.next();
+        String str = BaseballView.setNumber();
+
         if (!isNumber(str)) {
             throw new IllegalArgumentException();
         }
